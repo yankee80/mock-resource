@@ -1,0 +1,14 @@
+{
+    "name": "mockResource",
+    "version": "0.0.1",
+    "dependencies": {
+        "angular": "1.2.26",
+        "angular-resource": "1.2.26",
+        "angular-mocks": "1.2.26",
+        "json3": "3.3.1",
+        "es5-shim": "3.1.0"
+    },
+    "devDependencies": {
+    },
+    "appPath": "src"
+}
