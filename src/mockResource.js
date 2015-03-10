@@ -54,7 +54,7 @@ angular.module('mockResource', [])
                 }
 
                 function resolve(resolvedValue) {
-                    if(!startsWith$(method)){
+                    if (!startsWith$(method)) {
                         window.angular.extend(value, resolvedValue);
                     }
                     deferred.resolve(resolvedValue);

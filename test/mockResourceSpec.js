@@ -50,7 +50,7 @@ describe('Mock Resource', function() {
         spyOn(spiedObject, ['method']);
         spyOn(spiedObject, ['$method']);
 
-        spyObject = jasmine.createSpyObj('spyObject', ['method','$method']);
+        spyObject = jasmine.createSpyObj('spyObject', ['method', '$method']);
     });
 
     // used to parameterize tests - suite should be executed for 3 types of objects

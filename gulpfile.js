@@ -8,6 +8,18 @@ var rename = require('gulp-rename');
 var karma = require('karma');
 var bower = require('gulp-bower');
 var beautifier = require('gulp-jsbeautifier');
+var clean = require('gulp-clean');
+var releaseTasks = require('gulp-release-tasks');
+releaseTasks(gulp);
+
+
+// clean ...
+gulp.task('clean', function() {
+    return gulp.src('dist', {
+        read: false
+    })
+    .pipe(clean());
+});
 
 // Lint Task
 gulp.task('lint', function() {
@@ -18,10 +30,10 @@ gulp.task('lint', function() {
 
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
-    return gulp.src('js/*.js')
-        .pipe(concat('all.js'))
+    return gulp.src('src/**/*.js')
+        .pipe(concat('mockResource.js'))
         .pipe(gulp.dest('dist'))
-        .pipe(rename('all.min.js'))
+        .pipe(rename('mockResource.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
 });
@@ -53,4 +65,4 @@ gulp.task('beautifier', function() {
 });
 
 // Default Task
-gulp.task('default', ['bower', 'scripts', 'test', 'watch']);
+gulp.task('default', ['clean', 'bower', 'lint', 'beautifier', 'test', 'scripts']);
