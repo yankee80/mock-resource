@@ -10,6 +10,7 @@ var bower = require('gulp-bower');
 var beautifier = require('gulp-jsbeautifier');
 var clean = require('gulp-clean');
 var releaseTasks = require('gulp-release-tasks');
+var runSequence = require('run-sequence');
 releaseTasks(gulp);
 
 
@@ -65,4 +66,6 @@ gulp.task('beautifier', function() {
 });
 
 // Default Task
-gulp.task('default', ['clean', 'bower', 'lint', 'beautifier', 'test', 'scripts']);
+gulp.task('default', function() {
+    runSequence('clean', 'bower', 'lint', 'beautifier', 'test', 'scripts');
+});
