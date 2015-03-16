@@ -65,12 +65,21 @@ describe('Mock Resource', function() {
 
             describe('when mocks ' + objectTypes[type].desc + ' with method name NOT STARTING with $', function() {
 
-                var mockMethod;
+                var mockMethod, success, failure, error, resolvedValue, args;
 
                 beforeEach(function() {
                     obj = objectTypes[type].obj;
                     mockMethod = MockResource.mock(obj,
                         'method');
+                    error = {
+                        errorCode: 343
+                    };
+                    resolvedValue = {
+                        value: 4536
+                    };
+                    success = jasmine.createSpy('success');
+                    failure = jasmine.createSpy('failure');
+                    args = {};
                 });
 
                 it('should return empty object with $promise', function() {
@@ -96,17 +105,20 @@ describe('Mock Resource', function() {
 
                 });
 
-                it('should call failure callback on reject', function() {
+                it('should NOT call failure callback before calling reject', function() {
 
-                    var result = obj.method();
-                    var success, failure, error;
-                    error = {
-                        errorCode: 343
-                    };
-                    success = jasmine.createSpy('success');
-                    failure = jasmine.createSpy('failure');
+                    obj.method(args, success, failure);
 
-                    result.$promise.then(success, failure);
+                    rootScope.$digest();
+
+                    expect(failure).not.toHaveBeenCalled();
+                    expect(success).not.toHaveBeenCalled();
+
+                });
+
+                it('should call failure callback after calling reject', function() {
+
+                    obj.method(args, success, failure);
 
                     mockMethod.reject(error);
 
@@ -114,19 +126,37 @@ describe('Mock Resource', function() {
 
                     expect(failure).toHaveBeenCalledWith(error);
                     expect(success).not.toHaveBeenCalled();
+
+                });
+
+                it('should call failure callback after calling mocked method, even if reject was called before mocked method', function() {
+
+                    mockMethod.reject(error);
+
+                    obj.method(args, success, failure);
+
+                    rootScope.$digest();
+
+                    expect(failure).toHaveBeenCalledWith(error);
+                    expect(success).not.toHaveBeenCalled();
+                });
+
+                it('should NOT call failure callback after calling reject, but before call of mocked method', function() {
+
+                    mockMethod.reject(error);
+
+                    rootScope.$digest();
+
+                    expect(failure).not.toHaveBeenCalled();
+                    expect(success).not.toHaveBeenCalled();
+
+                    obj.method(args, success, failure);
+
                 });
 
                 it('should call success callback on resolve', function() {
 
-                    var result = obj.method();
-                    var success, failure;
-                    var resolvedValue = {
-                        errorCode: 343
-                    };
-                    success = jasmine.createSpy('success');
-                    failure = jasmine.createSpy('failure');
-
-                    result.$promise.then(success, failure);
+                    obj.method(args, success, failure);
 
                     mockMethod.resolve(resolvedValue);
 
@@ -136,16 +166,59 @@ describe('Mock Resource', function() {
                     expect(failure).not.toHaveBeenCalled();
                 });
 
+                it('should NOT call success callback before calling resolve', function() {
+
+                    obj.method(args, success, failure);
+
+                    rootScope.$digest();
+
+                    expect(success).not.toHaveBeenCalled();
+                    expect(failure).not.toHaveBeenCalled();
+
+                });
+
+                it('should call success callback after calling mocked method, even if resolve was called before mocked method', function() {
+
+                    mockMethod.resolve(resolvedValue);
+
+                    obj.method(args, success, failure);
+
+                    rootScope.$digest();
+
+                    expect(success).toHaveBeenCalledWith(resolvedValue);
+                    expect(failure).not.toHaveBeenCalled();
+                });
+
+                it('should NOT call success callback after calling resolve, but before call of mocked method', function() {
+
+                    mockMethod.resolve(resolvedValue);
+
+                    rootScope.$digest();
+
+                    expect(success).not.toHaveBeenCalled();
+                    expect(failure).not.toHaveBeenCalled();
+
+                });
+
             });
 
             describe('when mocks ' + objectTypes[type].desc + ' with method name STARTING with $', function() {
 
-                var mockMethod;
+                var mockMethod, success, failure, error, resolvedValue, args;
 
                 beforeEach(function() {
                     obj = objectTypes[type].obj;
                     mockMethod = MockResource.mock(obj,
                         '$method');
+                    error = {
+                        errorCode: 343
+                    };
+                    resolvedValue = {
+                        value: 4536
+                    };
+                    success = jasmine.createSpy('success');
+                    failure = jasmine.createSpy('failure');
+                    args = {};
                 });
 
                 it('should return $promise', function() {
@@ -156,17 +229,20 @@ describe('Mock Resource', function() {
 
                 });
 
-                it('should call failure callback on reject', function() {
+                it('should NOT call failure callback before calling reject', function() {
 
-                    var result = obj.$method();
-                    var success, failure, error;
-                    error = {
-                        errorCode: 343
-                    };
-                    success = jasmine.createSpy('success');
-                    failure = jasmine.createSpy('failure');
+                    obj.$method(args, success, failure);
 
-                    result.then(success, failure);
+                    rootScope.$digest();
+
+                    expect(failure).not.toHaveBeenCalled();
+                    expect(success).not.toHaveBeenCalled();
+
+                });
+
+                it('should call failure callback after calling reject', function() {
+
+                    obj.$method(args, success, failure);
 
                     mockMethod.reject(error);
 
@@ -174,19 +250,37 @@ describe('Mock Resource', function() {
 
                     expect(failure).toHaveBeenCalledWith(error);
                     expect(success).not.toHaveBeenCalled();
+
+                });
+
+                it('should call failure callback after calling mocked method, even if reject was called before mocked method', function() {
+
+                    mockMethod.reject(error);
+
+                    obj.$method(args, success, failure);
+
+                    rootScope.$digest();
+
+                    expect(failure).toHaveBeenCalledWith(error);
+                    expect(success).not.toHaveBeenCalled();
+                });
+
+                it('should NOT call failure callback after calling reject, but before call of mocked method', function() {
+
+                    mockMethod.reject(error);
+
+                    rootScope.$digest();
+
+                    expect(failure).not.toHaveBeenCalled();
+                    expect(success).not.toHaveBeenCalled();
+
+                    obj.$method(args, success, failure);
+
                 });
 
                 it('should call success callback on resolve', function() {
 
-                    var result = obj.$method();
-                    var success, failure;
-                    var resolvedValue = {
-                        errorCode: 343
-                    };
-                    success = jasmine.createSpy('success');
-                    failure = jasmine.createSpy('failure');
-
-                    result.then(success, failure);
+                    obj.$method(args, success, failure);
 
                     mockMethod.resolve(resolvedValue);
 
@@ -194,6 +288,40 @@ describe('Mock Resource', function() {
 
                     expect(success).toHaveBeenCalledWith(resolvedValue);
                     expect(failure).not.toHaveBeenCalled();
+                });
+
+                it('should NOT call success callback before calling resolve', function() {
+
+                    obj.$method(args, success, failure);
+
+                    rootScope.$digest();
+
+                    expect(success).not.toHaveBeenCalled();
+                    expect(failure).not.toHaveBeenCalled();
+
+                });
+
+                it('should call success callback after calling mocked method, even if resolve was called before mocked method', function() {
+
+                    mockMethod.resolve(resolvedValue);
+
+                    obj.$method(args, success, failure);
+
+                    rootScope.$digest();
+
+                    expect(success).toHaveBeenCalledWith(resolvedValue);
+                    expect(failure).not.toHaveBeenCalled();
+                });
+
+                it('should NOT call success callback after calling resolve, but before call of mocked method', function() {
+
+                    mockMethod.resolve(resolvedValue);
+
+                    rootScope.$digest();
+
+                    expect(success).not.toHaveBeenCalled();
+                    expect(failure).not.toHaveBeenCalled();
+
                 });
 
             });

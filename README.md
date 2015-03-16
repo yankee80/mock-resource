@@ -27,9 +27,26 @@ var saveCall = MockResource.mock(resource, 'save');
 
 saveCall.resolve(resourceSaveResult);
 ```
+To enable MockResource in your jasmine test you have to initialize 'mockResource' module. Then you can get instance of MockResource to use in your tests.
+```javascript
+beforeEach(function() {
 
-Remember, in both cases if you would like to fire success/failure promise callbacks you should fire $digest
+    module('mockResource');
+
+    inject(['$injector',
+        function($injector) {
+            MockResource = $injector.get('MockResource');
+        }
+    ]);
+}
+```
+
+Remember, if you would like to fire success/failure promise callbacks you should fire $digest
 
 ```javascript
 $scope.$digest();
+```
+Installing MockResource:
+```
+bower install mock-resource
 ```
