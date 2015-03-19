@@ -1,6 +1,6 @@
 {
   "name": "mock-resource",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {},
   "devDependencies": {
     "gulp": "3.8.11",
